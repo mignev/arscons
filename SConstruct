@@ -119,6 +119,16 @@ ARDUINO_VER     = resolve_var('ARDUINO_VER', 0) # Default to 0 if nothing is spe
 RST_TRIGGER     = resolve_var('RST_TRIGGER', None) # use built-in pulseDTR() by default
 EXTRA_LIB       = resolve_var('EXTRA_LIB', None) # handy for adding another arduino-lib dir
 
+RESET_PIN   = resolve_var('RESET_PIN', None)
+
+if not RESET_PIN:
+    print 'RESET_PIN must be defined.'
+    raise KeyError('RESET_PIN')
+else:
+    target_board = open("/etc/haos/programmer/target_board")
+    target_board.write(str(RESET_PIN))
+    target_board.close()
+
 pprint(VARTAB, indent = 4)
 
 if not ARDUINO_HOME:
@@ -398,7 +408,7 @@ avrdudeOpts = ['-V', '-F', '-c %s' % UPLOAD_PROTOCOL, '-b %s' % UPLOAD_SPEED,
 if AVRDUDE_CONF:
     avrdudeOpts.append('-C %s' % AVRDUDE_CONF)
 
-fuse_cmd = '%s %s' % (path.join(path.dirname(AVR_BIN_PREFIX), 'avrdude'),
+fuse_cmd = '%s %s' % (path.join(path.dirname(AVR_BIN_PREFIX), 'avrdude-haos'),
                       ' '.join(avrdudeOpts))
 
 upload = envArduino.Alias('upload', TARGET + '.hex', [reset_cmd, fuse_cmd])
