@@ -1,0 +1,5 @@
+{
+  "ARDUINO_BOARD" : "uno",
+  "RESET_PIN": "1",
+  "USE_SHIFTREGISTER": "yes"
+}

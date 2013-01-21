@@ -39,7 +39,8 @@
 
 from glob import glob
 from itertools import ifilter, imap
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, CalledProcessError, call
+import shlex
 import sys
 import re
 import os
@@ -125,9 +126,9 @@ if not RESET_PIN:
     print 'RESET_PIN must be defined.'
     raise KeyError('RESET_PIN')
 else:
-    target_board = open("/etc/haos/programmer/target_board")
-    target_board.write(str(RESET_PIN))
-    target_board.close()
+    target_board = 'sudo sh -c "echo {0} > /etc/haos/programmer/target_board"'.format(RESET_PIN)
+    call(shlex.split(target_board))
+
 
 pprint(VARTAB, indent = 4)
 
